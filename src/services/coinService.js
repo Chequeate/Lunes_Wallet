@@ -21,7 +21,7 @@ import {
 } from "../utils/localStorage";
 import {
   convertBiggestCoinUnit,
-  percentCalc,
+  percentCalcByRange,
   convertSmallerCoinUnit
 } from "../utils/numbers";
 import i18n from "../utils/i18n.js";
@@ -87,7 +87,7 @@ class CoinService {
           availableCoins[index].price.BRL.symbol = "R$";
           availableCoins[index].price.USD.symbol = "$";
           availableCoins[index].price.EUR.symbol = "€";
-          availableCoins[index].price.percent = percentCalc(1, 3) + "%"; //CALCULAR PORCENTAGEM
+          availableCoins[index].price.percent = percentCalcByRange(1, 3) + "%"; //CALCULAR PORCENTAGEM
 
           // CREATE ADDRESS
           let responseCreateAddress = await axios.post(
@@ -115,7 +115,7 @@ class CoinService {
           if (responsePrice.data.data) {
             availableCoins[index].price = responsePrice.data.data;
             availableCoins[index].price.percent =
-              percentCalc(priceHistory.initial, priceHistory.last) + "%";
+              percentCalcByRange(priceHistory.initial, priceHistory.last) + "%";
           } else {
             availableCoins[index].status = "inactive";
             availableCoins[index].price = undefined;

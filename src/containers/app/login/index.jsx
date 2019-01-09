@@ -69,6 +69,12 @@ let errorInternal = Loadable({
   loading: Transition,
   serverSideRequirePath: path.resolve(__dirname, "../../errors/500")
 });
+
+let validate = Loadable({
+  loader: () => fakeDelay(400).then(() => import("../../user/validate")),
+  loading: Transition,
+  serverSideRequirePath: path.resolve(__dirname, "../../user/validate")
+});
 /* eslint-enable */
 
 const imagePath = "/images/carousel/";
@@ -134,6 +140,7 @@ class Login extends Component {
                 <Route exact path="/login" component={login} />
                 <Route exact path="/reset" component={reset} />
                 <Route exact path="/create" component={create} />
+                <Route exact path="/email-verify" component={validate} />
                 {/* ERRORS PAGE */}
                 <Route path="/404" component={errorNotFound} />
                 <Route path="/500" component={errorInternal} />

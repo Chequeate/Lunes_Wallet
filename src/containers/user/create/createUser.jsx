@@ -5,12 +5,15 @@ import { Link } from "react-router-dom";
 // REDUX
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { getCreateUserInfo } from "../redux/userAction";
+import { getCreateUserInfo, verifyInvite } from "../redux/userAction";
 import { clearMessage, errorInput } from "../../errors/redux/errorAction";
 
 // UTILS
 import { inputValidator } from "../../../utils/inputValidator";
 import i18n from "../../../utils/i18n";
+
+// COMPONENTES
+import Loading from "../../../components/loading";
 
 // STYLE
 import style from "../style.css";
@@ -102,6 +105,25 @@ class CreateUser extends React.Component {
     }
   };
 
+  componentDidMount = () => {
+    const {verifyInvite} = this.props;
+
+    const url_hash = new URL(window.location.href);
+    const hash = url_hash.searchParams.get("link");
+    
+    if(hash!=null && hash!=undefined && hash != ""){
+      verifyInvite(hash);
+    }
+  }
+
+  renderInvite = () => {
+    const {invite} = this.props.user;
+
+    if(invite.loading) return <Loading color="lunes" />;
+
+    if(invite.user) return <div>{i18n.t("ACCEPT_INVITE_LABEL")} {invite.user}</div>;
+  }
+
   render() {
     let { inputs, errors } = this.state;
 
@@ -118,6 +140,10 @@ class CreateUser extends React.Component {
         <div>
           <div className={style.newAccountHeader}>
             {i18n.t("NEW_ACCOUNT_HEADER")}
+          </div>
+
+          <div className={style.inviteRow}>
+            {this.renderInvite()}
           </div>
 
           <input
@@ -189,7 +215,8 @@ CreateUser.propTypes = {
   getCreateUserInfo: PropTypes.func,
   clearMessage: PropTypes.func,
   errorInput: PropTypes.func,
-  user: PropTypes.object
+  user: PropTypes.object, 
+  verifyInvite: PropTypes.func
 };
 
 const mapSateToProps = store => ({
@@ -201,7 +228,8 @@ const mapDispatchToProps = dispatch =>
     {
       getCreateUserInfo,
       clearMessage,
-      errorInput
+      errorInput, 
+      verifyInvite
     },
     dispatch
   );

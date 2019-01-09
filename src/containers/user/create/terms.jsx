@@ -70,7 +70,8 @@ class CreateUserTerms extends React.Component {
         user.user.name,
         user.user.surname,
         user.user.email,
-        user.user.password
+        user.user.password, 
+        user.invite.link
       );
     }
     return;

@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
+
 // REDUX
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
@@ -14,6 +15,7 @@ import {
 // UTILS
 import i18n from "../../../utils/i18n";
 import compose from "recompose/compose";
+import { getProfileImg } from "./../../../utils/user.js"
 
 // STYLE
 import colors from "../../../components/bases/colors";
@@ -318,7 +320,7 @@ class User extends React.Component {
             <Grid item xs={12} className={style.row}>
               <div className={style.avatarAlign}>
                 <Avatar
-                  src={user.profilePicture}
+                  src={getProfileImg()}
                   alt={i18n.t("SETTINGS_USER_IMAGE")}
                   className={style.avatar}
                 />

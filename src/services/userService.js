@@ -25,7 +25,8 @@ class UserService {
           name: userInfo.name,
           surname: userInfo.surname,
           email: userInfo.email,
-          password: encryptMd5(userInfo.password)
+          password: encryptMd5(userInfo.password),
+          link: userInfo.link
         },
         API_HEADER
       );
@@ -135,6 +136,19 @@ class UserService {
 
       return response;
     } catch (error) {
+      return internalServerError();
+    }
+  }
+
+  async verifyEmail(hash){
+    try {
+      let response = await axios.get(
+        `${BASE_URL}/user/email-verify/${hash}`,
+        API_HEADER
+      );
+      
+      return response.data;
+    }catch(error){
       return internalServerError();
     }
   }

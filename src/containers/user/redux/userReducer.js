@@ -23,7 +23,16 @@ const initialState = {
     reset: 0
   },
   loading: false,
-  errors: []
+  errors: [], 
+  invite: {
+    loading: false,
+    link: undefined,
+    user: undefined
+  }, 
+  verifyEmail: {
+    loading: true,
+    success: false
+  }
 };
 
 const user = (state = initialState, action) => {
@@ -239,6 +248,52 @@ const user = (state = initialState, action) => {
           login: 0,
           create: 0,
           reset: 0
+        }
+      };
+
+    case "INVITE_VALIDATE_LOADING":
+      return {
+        ...state,
+        invite: {
+          ...state.invite,
+          loading: action.loading
+        }
+      };
+    
+    case "INVITE_VALIDATE_REDUCER":
+      return {
+        ...state,
+        invite: {
+          link: action.link, 
+          user: action.user,
+          loading: false
+        }
+      };
+
+    case "VERIFY_EMAIL_LOADING":
+      return {
+        ...state,
+        verifyEmail: {
+          ...state.verifyEmail,
+          loading: true
+        }
+      };
+    
+    case "VERIFY_EMAIL_SUCCESS":
+      return {
+        ...state,
+        verifyEmail: {
+          success:true,
+          loading: false,
+        }
+      };
+
+    case "VERIFY_EMAIL_ERROR":
+      return {
+        ...state,
+        verifyEmail: {
+          success:false,
+          loading: false,
         }
       };
 

@@ -23,6 +23,9 @@ import colors from "../../components/bases/colors";
 import CardOffer from "./components/cardOffer";
 import Select from "../../components/select";
 import Loading from "../../components/loading";
+import TabsFilter from "./components/tab";
+import Instructions from "./instructions";
+import Sort from "./sort";
 
 // UTILS
 import i18n from "../../utils/i18n";
@@ -71,18 +74,33 @@ class Offers extends React.Component {
     this.state = {
       tabGiving: true,
       tabDone: false,
+      tabCanceled: false,
       coinSelect: {
         name: "Lunes",
         value: "lunes",
         img: "images/icons/coins/lunes.png"
       },
-      myOrders: false
+      listTypeP2P: [
+        { title: "Escrow", value: undefined, img: undefined },
+        { title: "P2P", value: undefined, img: undefined }
+      ],
+      listTypeFilter: [
+        { title: "Todos", value: undefined, img: undefined },
+        { title: "Meus", value: undefined, img: undefined }
+      ],
+      myOrders: false,
+      typeP2P: "P2P",
+      typeFilter: "Todos",
+      filterTab: 0,
+      sortMenu: false,
+      typeOfSort: undefined
     };
 
     this.filterMyOrders = this.filterMyOrders.bind(this);
   }
 
   coinSelected = (value, title, img = undefined) => {
+    const { getFilter } = this.props;
     this.setState({
       ...this.state,
       coinSelect: {
@@ -92,55 +110,107 @@ class Offers extends React.Component {
       }
     });
 
-    this.filterMyOrders(false);
+    getFilter("p2p", value);
   };
 
   clearCancel = () => {
     const { clearCancel, getFilter } = this.props;
-    const { coinSelect } = this.state;
 
     clearCancel();
 
-    getFilter(coinSelect.value, "p2p", "");
+    getFilter("p2p", "");
   };
 
   onChangeTab(status) {
     if (status == 1) {
-      this.setState({ ...this.state, tabGiving: false, tabDone: true });
+      this.setState({
+        ...this.state,
+        tabGiving: true,
+        tabDone: false,
+        tabCanceled: false
+      });
+    } else if (status == 2) {
+      this.setState({
+        ...this.state,
+        tabGiving: false,
+        tabDone: true,
+        tabCanceled: false
+      });
     } else {
-      this.setState({ ...this.state, tabGiving: true, tabDone: false });
+      this.setState({
+        ...this.state,
+        tabGiving: false,
+        tabDone: false,
+        tabCanceled: true
+      });
     }
+
     this.filterMyOrders(false);
   }
 
   componentDidMount = () => {
+    const { coinSelect, typeP2P } = this.state;
     const { getFilter, getHistory, type } = this.props;
-    const { coinSelect } = this.state;
 
     if (type === "myhistory") {
-      getHistory(coinSelect.value);
+      getHistory(coinSelect.value, typeP2P.toLowerCase());
     } else {
-      getFilter(coinSelect.value, "p2p", "");
+      getFilter("p2p", "");
     }
   };
 
-  renderOders = () => {
-    const { orders, loading, type } = this.props;
-    const { tabGiving, tabDone } = this.state;
+  renderOrders = () => {
+    let { orders, loading, type } = this.props;
+    const {
+      typeOfSort,
+      tabGiving,
+      tabDone,
+      tabCanceled,
+      filterTab
+    } = this.state;
     if (loading) return <Loading color="lunes" margin={"50% 0% 0% 0%"} />;
 
-    if (orders.length <= 0) return (<div className={style.noOrder}>
-      <h1>{i18n.t("P2P_NO_ORDER")}</h1>
-    </div> );
+    if (typeOfSort) orders = this.sortOrders(orders);
+
+    if (orders.length <= 0)
+      return (
+        <div className={style.noOrder}>
+          <h1>{i18n.t("P2P_NO_ORDER")}</h1>
+        </div>
+      );
     if (type == "myhistory") {
       return orders.map((val, key) => {
-        if(!tabDone){
-          if(val.status == "confirmed")
-          return <CardOffer key={key} order={val} />;
+        if (filterTab == 0 && val.way == "buy") {
+          if (
+            tabGiving &&
+            (val.status == "confirming" || val.status == "waiting")
+          ) {
+            return <CardOffer key={key} order={val} status={val.status} />;
+          }
+
+          if (tabDone && val.status == "confirmed") {
+            return <CardOffer key={key} order={val} status={val.status} />;
+          }
+
+          if (tabCanceled && val.status === "canceled") {
+            return <CardOffer key={key} order={val} status={val.status} />;
+          }
         }
-        if (!tabGiving) {
-          if (val.status != "confirmed")
-            return <CardOffer key={key} order={val} />;
+        if (filterTab == 1 && val.way == "sell") {
+          if (
+            tabGiving &&
+            (val.status == "confirming" || val.status == "waiting")
+          ) {
+            return <CardOffer key={key} order={val} status={val.status} />;
+          }
+
+          if (tabDone && val.status == "confirmed") {
+            return <CardOffer key={key} order={val} status={val.status} />;
+          }
+
+          if (tabCanceled && val.status === "canceled") {
+            return <CardOffer key={key} order={val} status={val.status} />;
+          }
         }
       });
     }
@@ -149,59 +219,203 @@ class Offers extends React.Component {
     });
   };
 
-  filterMyOrders = filtermyorder => {
+  filterMyOrders = (filtermyorder, title) => {
     const { getFilter, getMyOrders, getHistory, type } = this.props;
     const { coinSelect, myOrders } = this.state;
+
     if (myOrders == false && type != "myhistory") {
       getMyOrders(coinSelect.value);
-    }else if(type == "myhistory"){
+    } else if (type == "myhistory") {
       getHistory(coinSelect.value);
     } else {
-      getFilter(coinSelect.value, "p2p", "");
-
+      getFilter("p2p", "");
     }
 
     if (filtermyorder) {
       this.setState({
         ...this.state,
-        myOrders: !myOrders
+        myOrders: !myOrders,
+        typeFilter: title
       });
     }
   };
 
-  renderFilters = () => {
+  handleTab = data => {
+    const { getHistory } = this.props;
+    const { coinSelect } = this.state;
+    this.setState({
+      ...this.state,
+      filterTab: data
+    });
+    getHistory(coinSelect.value);
+  };
+
+  renderContentFilters = () => {
     const { type } = this.props;
-    const { tabGiving, tabDone } = this.state;
+    const { tabGiving, tabDone, tabCanceled } = this.state;
 
     if (type === "myhistory") {
       return (
         <div className={style.tabContent}>
           <div
-            className={tabGiving ? style.itemTab : style.itemTabActive}
+            className={!tabGiving ? style.itemTab : style.itemTabActive}
             onClick={() => this.onChangeTab(1)}
           >
             {i18n.t("P2P_STATUS_TEXT_1")}
           </div>
           <div
-            className={tabDone ? style.itemTab : style.itemTabActive}
-            onClick={() => this.onChangeTab(0)}
+            className={!tabDone ? style.itemTab : style.itemTabActive}
+            onClick={() => this.onChangeTab(2)}
           >
             {i18n.t("P2P_STATUS_TEXT_2")}
           </div>
+          <div
+            className={!tabCanceled ? style.itemTab : style.itemTabActive}
+            onClick={() => this.onChangeTab(3)}
+          >
+            {i18n.t("P2P_STATUS_TEXT_3")}
+          </div>
         </div>
       );
-    }    
+    }
     return;
+  };
+  selectTypeP2P = (value, title) => {
+    const { getHistory } = this.props;
+    let { coinSelect, typeP2P } = this.state;
+    this.setState({
+      ...this.state,
+      typeP2P: title
+    });
+    getHistory(coinSelect.value, typeP2P.toLowerCase());
+  };
+
+  handleSort = () => {
+    this.setState({
+      ...this.state,
+      sortMenu: !this.state.sortMenu
+    });
+  };
+
+  selectTypeFilter = (value, title) => this.filterMyOrders(true, title);
+
+  renderMenu = () => {
+    const { type, coinsEnabled } = this.props;
+    const {
+      coinSelect,
+      listTypeP2P,
+      listTypeFilter,
+      typeP2P,
+      typeFilter
+    } = this.state;
+    const titles = [i18n.t("P2P_TAB_PURCHASE"), i18n.t("P2P_TAB_SALE")];
+
+    if (coinsEnabled.length > 0) {
+      coinsEnabled.forEach(el => {
+        el.title = "";
+      });
+    }
+
+    return type !== "myhistory" ? (
+      <Grid className={style.headerActionFilter} container>
+        <Grid
+          item
+          xs={2}
+          style={{ textAlign: "center" }}
+          className={style.scrollSelect}
+        >
+          <Select
+            list={coinsEnabled}
+            title={""}
+            titleImg={coinSelect.img}
+            selectItem={this.coinSelected}
+            error={null}
+            width={"100%"}
+          />
+        </Grid>
+        <Grid item xs={1} />
+        <Grid item xs={3} style={{ textAlign: "center" }}>
+          <Select
+            list={listTypeFilter}
+            title={typeFilter}
+            selectItem={this.selectTypeFilter}
+            error={null}
+            width={"100%"}
+          />
+        </Grid>
+        <Grid item xs={1} />
+        <Grid item xs={3} style={{ textAlign: "center" }}>
+          <Select
+            list={listTypeP2P}
+            title={typeP2P}
+            selectItem={this.selectTypeP2P}
+            error={null}
+            width={"90%"}
+          />
+        </Grid>
+        <Grid item xs={1} style={{ marginTop: "5px", textAlign: "center" }}>
+          <div className={style.sort}>
+            <img
+              src="/images/icons/p2p/sort.png"
+              onClick={() => this.handleSort()}
+              style={{ cursor: "pointer" }}
+            />
+          </div>
+        </Grid>
+        <Grid item xs={1} style={{ marginTop: "5px", textAlign: "center" }}>
+          <Instructions />
+        </Grid>
+        {this.state.sortMenu && <Sort that={this} />}
+      </Grid>
+    ) : (
+      <Grid container style={{ paddingBottom: "1.5rem" }}>
+        <TabsFilter
+          tabTitles={titles}
+          justify="center"
+          handleTab={this.handleTab}
+        />
+      </Grid>
+    );
+  };
+
+  _sortAscendingOrDescending = (orders, type) => {
+    return orders.sort((a, b) => {
+      if (!a || !b) return;
+      if (!a.sell || !b.sell) return;
+      let aAmount = a.sell.amount | 0;
+      let bAmount = b.sell.amount | 0;
+      if (type == "descending") return bAmount - aAmount;
+      return aAmount - bAmount; //ascending is the default sorting method
+    });
+  };
+  _sortByNewestOrOldest = (orders, type) => {
+    return orders.sort((a, b) => {
+      if (!a || !b) return;
+      if (!a.createdAt || !b.createdAt) return;
+      let aAmount = new Date(a.createdAt).getTime() | 0;
+      let bAmount = new Date(b.createdAt).getTime() | 0;
+      if (type == "oldest") return bAmount - aAmount;
+      return aAmount - bAmount; //ascending is the default sorting method
+    });
+  };
+  sortOrders = orders => {
+    let { typeOfSort } = this.state;
+    if (!typeOfSort) return orders;
+    if (!orders || (orders && orders.length < 1)) return orders;
+    // ascending | descending | newest | oldest
+    if (typeOfSort === "ascending" || typeOfSort === "descending") {
+      orders = this._sortAscendingOrDescending(orders, typeOfSort);
+      return orders;
+    }
+    if (typeOfSort === "newest" || typeOfSort === "oldest") {
+      orders = this._sortByNewestOrOldest(orders, typeOfSort);
+      return orders;
+    }
+    return orders;
   };
 
   render() {
-    const { coinsEnabled, cancelDone } = this.props;
-    const { coinSelect, myOrders } = this.state;
-
-    const activeButton = myOrders
-      ? style.buttonEnable
-      : style.buttonBorderGreen;
-
+    const { cancelDone } = this.props;
     if (cancelDone)
       return (
         <div>
@@ -214,34 +428,9 @@ class Offers extends React.Component {
 
     return (
       <div>
-        <div className={style.headerActionFilter}>
-          <Grid container>
-            <Grid item xs={7}>
-              <div className={style.headerSelect}>
-                <Select
-                  list={coinsEnabled}
-                  title={coinSelect.name}
-                  titleImg={coinSelect.img}
-                  selectItem={this.coinSelected}
-                  error={null}
-                  width={"89%"}
-                />
-              </div>
-            </Grid>
-            <Grid item xs={5}>
-              <button
-                className={activeButton}
-                onClick={() => this.filterMyOrders(true)}
-              >
-                {i18n.t("P2P_MY_LISTING")}
-              </button>
-            </Grid>
-          </Grid>
-        </div>
-
-        {this.renderFilters()}
-
-        <div className={style.content}>{this.renderOders()}</div>
+        {this.renderMenu()}
+        {this.renderContentFilters()}
+        <div className={style.content}>{this.renderOrders()}</div>
       </div>
     );
   }

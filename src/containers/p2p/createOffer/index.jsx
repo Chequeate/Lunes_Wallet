@@ -71,7 +71,8 @@ class CreateOffer extends React.Component {
         addressSeller: "",
         description: ""
       },
-      errors: [], 
+      errors: [],
+      coinPaymentList: [],
       descriptionTotal: 250
     };
 
@@ -79,6 +80,9 @@ class CreateOffer extends React.Component {
   }
 
   coinSelectedSell = (value, title, img = undefined) => {
+    const { coinsEnabled } = this.props;
+    const coinPaymentList = coinsEnabled.filter(coin => coin.value !== value);
+
     this.setState({
       ...this.state,
       coinSell: {
@@ -86,6 +90,7 @@ class CreateOffer extends React.Component {
         value,
         img
       },
+      coinPaymentList,
       order: {
         ...this.state.order,
         coin: value
@@ -93,7 +98,7 @@ class CreateOffer extends React.Component {
     });
   };
 
-  coinSelectedBuy = (value, title, img = undefined) => {
+  paymentCoinSelected = (value, title, img = undefined) => {
     const { coinsEnabled } = this.props;
     let idMethod = 0;
     coinsEnabled.map(val => {
@@ -190,7 +195,7 @@ class CreateOffer extends React.Component {
           ...this.state,
           order: {
             ...this.state.order,
-            description: value, 
+            description: value
           }
         });
         break;
@@ -209,29 +214,16 @@ class CreateOffer extends React.Component {
       addressSeller,
       description
     } = this.state.order;
+
     let error = [];
 
-    if (type == "") {
-      error.push(i18n.t("P2P_ERROR_1"));
-    }
-    if (coin == "") {
-      error.push(i18n.t("P2P_ERROR_2"));
-    }
-    if (paymentMethodId == "") {
-      error.push(i18n.t("P2P_ERROR_3"));
-    }
-    if (amount == "") {
-      error.push(i18n.t("P2P_ERROR_4"));
-    }
-    if (amountPayment == "") {
-      error.push(i18n.t("P2P_ERROR_5"));
-    }
-    if (addressSeller == "") {
-      error.push(i18n.t("P2P_ERROR_6"));
-    }
-    if (description == "") {
-      error.push(i18n.t("P2P_ERROR_7"));
-    }
+    if (!type) error.push(i18n.t("P2P_ERROR_1"));
+    if (!coin) error.push(i18n.t("P2P_ERROR_2"));
+    if (!paymentMethodId) error.push(i18n.t("P2P_ERROR_3"));
+    if (!amount) error.push(i18n.t("P2P_ERROR_4"));
+    if (!amountPayment) error.push(i18n.t("P2P_ERROR_5"));
+    if (!addressSeller) error.push(i18n.t("P2P_ERROR_6"));
+    if (!description) error.push(i18n.t("P2P_ERROR_7"));
 
     if (error.length > 0) {
       this.setState({
@@ -243,16 +235,17 @@ class CreateOffer extends React.Component {
         ...this.state,
         errors: []
       });
+
       createOfferWhenSelling(order);
     }
   };
-  
+
   renderErros = () => {
     let { errors } = this.state;
     return Object.keys(errors).map((value, key) => {
       if (errors[key]) {
         return (
-          <div className={style.textErrorSmall}>
+          <div key={key} className={style.textErrorSmall}>
             <ClearIcon
               className={style.iconListValid}
               style={{ color: "red" }}
@@ -262,10 +255,10 @@ class CreateOffer extends React.Component {
         );
       }
     });
+  };
 
-  }
   render() {
-    const { coinBuy, coinSell } = this.state;
+    const { coinBuy, coinSell, coinPaymentList } = this.state;
     const {
       classes,
       coinsEnabled,
@@ -291,7 +284,7 @@ class CreateOffer extends React.Component {
     if (createError)
       return (
         <div>
-          <span className={style.textError}>{i18n.t("P2P_ERROR")}{" "}</span>
+          <span className={style.textError}>{i18n.t("P2P_ERROR")} </span>
           <button className={style.btContinue} onClick={clearOffer}>
             {i18n.t("P2P_TRY_AGAIN")}
           </button>
@@ -311,7 +304,6 @@ class CreateOffer extends React.Component {
             </Grid>
             <Grid item xs={6}>
               <span className={style.name}>{username}</span>
-              
             </Grid>
             <Grid item xs={4} style={{ paddingLeft: 10 }}>
               <div className={style.boxStar}>
@@ -354,6 +346,45 @@ class CreateOffer extends React.Component {
           </div>
 
           <div className={style.formGroup}>
+            <div className={style.textSmall}>
+              {i18n.t("P2P_CREATE_OFFER_NEGOTIATION")}
+            </div>
+            <FormControlLabel
+              value="p2p"
+              className={style.labelRadio}
+              classes={{ label: classes.rootLabel }}
+              control={
+                <Radio
+                  checked={this.state.selectedValue === "p2p"}
+                  icon={<Lens />}
+                  checkedIcon={<Lens />}
+                  onChange={this.handleChange}
+                  classes={{ root: classes.root, checked: classes.checked }}
+                />
+              }
+              label="P2P (Peer to Peer)"
+              labelPlacement="end"
+            />
+            {/* <FormControlLabel
+              value="escroow"
+              className={style.labelRadio}
+              classes={{ label: classes.rootLabel }}
+              control={
+                <Radio
+                  checked={this.state.selectedValue === "escroow"}
+                  icon={<Lens />}
+                  checkedIcon={<Lens />}
+                  onChange={this.handleChange}
+                  classes={{ root: classes.root, checked: classes.checked }}
+                />
+              }
+              label="Escroow"
+              labelPlacement="end"
+            /> */}
+            <hr />
+          </div>
+
+          <div className={style.formGroup}>
             <Grid container>
               <Grid item xs={4}>
                 <div className={style.textSmall}>
@@ -374,38 +405,15 @@ class CreateOffer extends React.Component {
                   {i18n.t("P2P_CREATE_OFFER_COIN_PAYMENT")}
                 </div>
                 <Select
-                  list={coinsEnabled}
+                  list={coinPaymentList}
                   title={coinBuy.name}
                   titleImg={coinBuy.img}
-                  selectItem={this.coinSelectedBuy}
+                  selectItem={this.paymentCoinSelected}
                   error={null}
                   width={"100%"}
                 />
               </Grid>
             </Grid>
-            <hr />
-          </div>
-
-          <div className={style.formGroup}>
-            <div className={style.textSmall}>
-              {i18n.t("P2P_CREATE_OFFER_NEGOTIATION")}
-            </div>
-            <FormControlLabel
-              value="p2p"
-              className={style.labelRadio}
-              classes={{ label: classes.rootLabel }}
-              control={
-                <Radio
-                  checked={this.state.selectedValue === "p2p"}
-                  icon={<Lens />}
-                  checkedIcon={<Lens />}
-                  onChange={this.handleChange}
-                  classes={{ root: classes.root, checked: classes.checked }}
-                />
-              }
-              label="P2P (Peer to Peer)"
-              labelPlacement="end"
-            />
             <hr />
           </div>
 
@@ -427,7 +435,10 @@ class CreateOffer extends React.Component {
             <div className={style.textSmall}>
               {i18n.t("P2P_CREATE_OFFER_DESCRIPTION")}
             </div>
-            <span className={style.counterDescription}>{this.state.order.description.length} / {this.state.descriptionTotal}</span>
+            <span className={style.counterDescription}>
+              {this.state.order.description.length} /{" "}
+              {this.state.descriptionTotal}
+            </span>
             <textarea
               className={style.textArea}
               name="description"
@@ -443,10 +454,9 @@ class CreateOffer extends React.Component {
               {loadingCreateOrder ? (
                 <Loading />
               ) : (
-                  i18n.t("P2P_CREATE_OFFER_BUTTON_CONFIRMATION")
-                )}
+                i18n.t("P2P_CREATE_OFFER_BUTTON_CONFIRMATION")
+              )}
             </button>
-            
           </div>
         </div>
       </div>

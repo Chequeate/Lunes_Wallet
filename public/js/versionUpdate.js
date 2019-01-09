@@ -20,7 +20,7 @@ function writeFile(file) {
   try {
     let data = "const data = " + JSON.stringify(file);
     fs.writeFile("./public/js/version.js", data);
-    return console.log("Version Update Successfully")
+    return console.log("Version Update Successfully");
   } catch (error) {
     console.log("Error at write file: ", error);
     return;

@@ -13,8 +13,28 @@
 
 :local .starActive {
   composes: star;
-  color: #fad04d;
+  color: #62D884;
   opacity: 1;
+}
+
+:local .starRating {
+  opacity: .4;
+  max-width: 32px;
+  max-height: 32px;
+  font-size: 32px;
+  padding-right: 4px;
+  cursor: pointer;
+}
+
+:local .starActiveRating {
+  composes: star;
+  color: #62D884;
+  max-width: 32px;
+  max-height: 32px;
+  font-size: 32px;
+  padding-right: 4px;
+  opacity: 1;
+  cursor: pointer;
 }
 
 

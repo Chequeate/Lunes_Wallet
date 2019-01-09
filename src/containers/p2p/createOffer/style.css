@@ -109,6 +109,31 @@
   display: block;
   margin: 30px 0px 45px 0px;
 }
+@media (min-height: 400px) {
+  :local .btContinue {
+    margin-bottom: 250px;
+  }
+}
+@media (min-height: 450px) {
+  :local .btContinue {
+    margin-bottom: 200px;
+  }
+}
+@media (min-height: 500px) {
+  :local .btContinue {
+    margin-bottom: 150px;
+  }
+}
+@media (min-height: 550px) {
+  :local .btContinue {
+    margin-bottom: 100px;
+  }
+}
+@media (min-height: 600px) {
+  :local .btContinue {
+    margin-bottom: 50px;
+  }
+}
 
 :local .offerText {
   display: flex;
@@ -192,4 +217,15 @@
   margin-bottom: -8px;
   margin-right: 10px;
   width: 14px;
+}
+
+/* . SCROLLBAR */
+:local(.scrollSelect *::-webkit-scrollbar){
+  background-color: transparent;
+  border-radius: 6px;
+}
+
+:local(.scrollSelect *::-webkit-scrollbar-thumb){
+  background-color: #654fa4;
+  border-radius: 6px;
 }

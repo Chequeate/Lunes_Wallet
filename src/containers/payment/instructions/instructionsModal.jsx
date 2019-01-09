@@ -13,10 +13,13 @@ class InstructionsModal extends React.Component {
         <div className={style.infoModal}>
           <p>
             <strong>{i18n.t("INSTRUCTION_MODAL_PAY_INFO_1_TITTLE")}</strong>
-            {i18n.t("INSTRUCTION_MODAL_PAY_INFO_1")}<br/>
+            {i18n.t("INSTRUCTION_MODAL_PAY_INFO_1")}
+            <br />
           </p>
         </div>
-        <div className={style.infoModal}><strong>{i18n.t("INSTRUCTION_MODAL_PAY_0")}</strong></div>
+        <div className={style.infoModal}>
+          <strong>{i18n.t("INSTRUCTION_MODAL_PAY_0")}</strong>
+        </div>
         <ol>
           <li>
             <span> {i18n.t("INSTRUCTION_MODAL_PAY_1")}</span>
@@ -28,7 +31,9 @@ class InstructionsModal extends React.Component {
             <span> {i18n.t("INSTRUCTION_MODAL_PAY_3")}</span>
           </li>
         </ol>
-        <div className={style.infoModal}><strong>{i18n.t("INSTRUCTION_MODAL_PAY__BTC_0")}</strong></div>
+        <div className={style.infoModal}>
+          <strong>{i18n.t("INSTRUCTION_MODAL_PAY__BTC_0")}</strong>
+        </div>
         <ol>
           <li>
             <span> {i18n.t("INSTRUCTION_MODAL_PAY__BTC_1")}</span>

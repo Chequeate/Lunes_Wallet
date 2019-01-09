@@ -48,14 +48,22 @@ class P2pService {
     }
   }
 
-  async getHistory(token, coin) {
+  async getHistory(token, coin, type) {
     try {
       API_HEADER.headers.Authorization = token;
 
-      let response = await axios.get(
-        BASE_URL + "/coin/" + coin + "/p2p/history",
-        API_HEADER
-      );
+      let response;
+      if (!type || type === "p2p") {
+        response = await axios.get(
+          BASE_URL + "/coin/" + coin + "/p2p/history",
+          API_HEADER
+        );
+      } else if (type === "escrow") {
+        response = await axios.get(
+          `${BASE_URL}/coin/${coin}/p2p/order/${type}`,
+          API_HEADER
+        );
+      }
 
       setAuthToken(response.headers[HEADER_RESPONSE]);
 
@@ -67,13 +75,14 @@ class P2pService {
 
   async acceptOfferWhenBuying(token, data) {
     try {
-      let { coin, orderId } = data;
+      let { coin, orderId, addressBuyer } = data;
       API_HEADER.headers.Authorization = token;
 
       const response = await axios.post(
         `${BASE_URL}/coin/${coin}/p2p/buy`,
         {
-          orderId: orderId
+          orderId,
+          addressBuyer
         },
         API_HEADER
       );
@@ -115,7 +124,7 @@ class P2pService {
       );
 
       setAuthToken(response.headers[HEADER_RESPONSE]);
-      
+
       if (response.data.code !== 200) {
         throw new Error(i18n.t("P2P_FAILED_TO_BUY_COIN"));
       }
@@ -126,22 +135,21 @@ class P2pService {
     }
   }
 
-  async getFilter(token, coin, type, coinBuy) {
+  async getFilter(token, type, coinBuy) {
     try {
       API_HEADER.headers.Authorization = token;
 
-      let response = await axios.get(
-        BASE_URL + "/coin/" + coin + "/p2p/order/" + type + "/" + coinBuy,
+      const coin = !coinBuy ? "lunes" : coinBuy;
+      const response = await axios.get(
+        `${BASE_URL}/coin/${coin}/p2p/order/${type}/${coin}`,
         API_HEADER
       );
 
       setAuthToken(response.headers[HEADER_RESPONSE]);
 
-      if(response.data.data == undefined){
-        return [];
-      }
+      if (!response.data.data) return;
 
-      return response.data.data.orders;
+      return response.data.data;
     } catch (error) {
       return internalServerError();
     }
@@ -163,6 +171,107 @@ class P2pService {
       }
 
       return response;
+    } catch (error) {
+      return internalServerError();
+    }
+  }
+
+  async createSignature(token, data) {
+    try {
+      let { planId, txID } = data;
+      API_HEADER.headers.Authorization = token;
+      const response = await axios.post(
+        `${BASE_URL}/signature`,
+        {
+          planId,
+          txID
+        },
+        API_HEADER
+      );
+
+      setAuthToken(response.headers[HEADER_RESPONSE]);
+
+      if (response.data.code !== 200) {
+        return false;
+      }
+
+      return true;
+    } catch (error) {
+      return internalServerError();
+    }
+  }
+
+  async getProfile(token, userId) {
+    try {
+      let evaluation = undefined;
+      const request = userId
+        ? `${BASE_URL}/coin/lunes/p2p/profile?userId=${userId}`
+        : `${BASE_URL}/coin/lunes/p2p/profile`;
+
+      API_HEADER.headers.Authorization = token;
+      let response = await axios.get(request, API_HEADER);
+
+      if (userId) {
+        evaluation = await axios.get(
+          `${BASE_URL}/coin/lunes/p2p/profile/rating?userId=${userId}`,
+          API_HEADER
+        );
+      } else {
+        evaluation = await axios.get(
+          `${BASE_URL}/coin/lunes/p2p/profile/rating`,
+          API_HEADER
+        );
+      }
+
+      response.data.data.evaluation = evaluation.data.data.rating;
+      setAuthToken(response.headers[HEADER_RESPONSE]);
+
+      return response.data;
+    } catch (error) {
+      return internalServerError();
+    }
+  }
+  async setRatingOrder(token, data) {
+    try {
+      let { value, description, orderId } = data;
+      API_HEADER.headers.Authorization = token;
+      const response = await axios.post(
+        `${BASE_URL}/coin/lunes/p2p/rating/${orderId}`,
+        {
+          value,
+          description
+        },
+        API_HEADER
+      );
+
+      setAuthToken(response.headers[HEADER_RESPONSE]);
+      if (response.data.code !== 200) {
+        return false;
+      }
+
+      return true;
+    } catch (error) {
+      return internalServerError();
+    }
+  }
+
+  async confirmOrder(token, idOrder) {
+    try {
+      API_HEADER.headers.Authorization = token;
+
+      const response = await axios.post(
+        `${BASE_URL}/coin/lunes/p2p/confirm/${idOrder}`,
+        {},
+        API_HEADER
+      );
+
+      setAuthToken(response.headers[HEADER_RESPONSE]);
+
+      if (response.data.code !== 200) {
+        return false;
+      }
+
+      return true;
     } catch (error) {
       return internalServerError();
     }

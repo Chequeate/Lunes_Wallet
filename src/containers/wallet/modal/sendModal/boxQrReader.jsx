@@ -21,7 +21,12 @@ class BoxQrReader extends Component {
   }
 
   handleScan = data => {
-    let { coin, coins, getValidateAddress, setWalletSendModalLoading } = this.props;
+    let {
+      coin,
+      coins,
+      getValidateAddress,
+      setWalletSendModalLoading
+    } = this.props;
     let coinName = coins[coin].name;
 
     if (data) {

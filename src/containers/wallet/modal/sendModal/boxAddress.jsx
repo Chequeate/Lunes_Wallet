@@ -46,6 +46,37 @@ class BoxAddress extends React.Component {
     return;
   };
 
+  renderQrCodeReader = () => {
+    let IosApp = false;
+
+    if (
+      navigator.userAgent.search("iPhone") !== -1 &&
+      navigator.userAgent.search("Mobile") !== -1 &&
+      navigator.userAgent.search("Safari") === -1
+    ) {
+      IosApp = true;
+    }
+
+    if (IosApp) return;
+
+    return (
+      <Hidden lgUp>
+        <div className={style.boxQr} onClick={() => this.showQrCodeReader()}>
+          <div className={style.boxDecription}>
+            <img
+              src="/images/icons/qrcode/qrcode.png"
+              className={style.hoverShow}
+            />
+            <div>{i18n.t("MODAL_SEND_QR_CODE")}</div>
+          </div>
+          <div className={style.textHelp}>
+            {i18n.t("MODAL_SEND_QR_CODE_INSTRUCTIONS")}
+          </div>
+        </div>
+      </Hidden>
+    );
+  };
+
   handleQrCodeReader = () => {
     let { isVisible, address } = this.state;
     let { coin, modal } = this.props;
@@ -69,21 +100,7 @@ class BoxAddress extends React.Component {
 
     return (
       <div>
-        <Hidden lgUp>
-          <div className={style.boxQr} onClick={() => this.showQrCodeReader()}>
-            <div className={style.boxDecription}>
-              <img
-                src="/images/icons/qrcode/qrcode.png"
-                className={style.hoverShow}
-              />
-              <div>{i18n.t("MODAL_SEND_QR_CODE")}</div>
-            </div>
-            <div className={style.textHelp}>
-              {i18n.t("MODAL_SEND_QR_CODE_INSTRUCTIONS")}
-            </div>
-          </div>
-        </Hidden>
-
+        {this.renderQrCodeReader()}
         <div className={style.modalBox}>
           <div className={style.boxDecription}>
             <img

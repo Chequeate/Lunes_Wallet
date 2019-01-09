@@ -46,7 +46,7 @@ console.log("\n", "\x1b[0m", "\x1b[21m");
 
 
 module.exports = {
-  entry: "./src/index.jsx",
+  entry: ["babel-polyfill","./src/index.jsx"],
   devtool: 'source-map',
   module: {
     rules: [

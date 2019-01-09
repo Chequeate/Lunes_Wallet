@@ -1,13 +1,99 @@
 import { put, call } from "redux-saga/effects";
-import { internalServerError } from "../../errors/statusCodeMessage";
+import {
+  internalServerError,
+  modalSuccess
+} from "../../errors/statusCodeMessage";
 
 // UTILS
-import { getAuthToken } from "../../../utils/localStorage";
+import { getAuthToken, getDecodedAuthToken } from "../../../utils/localStorage";
+import i18n from "../../../utils/i18n";
+import { decodeToken } from "../../../utils/cryptography";
+import { getChatBundle } from "../chat/functions";
 
 // SERVICES
 import P2pService from "../../../services/p2pService";
 
 const p2pService = new P2pService();
+
+//prepare to the seller, open to the buyer
+export function* prepareOrOpenChat(payload) {
+  try {
+    let { order } = payload;
+
+    let state = window.store.getState();
+    let { orders: myOrders } = state.p2p;
+
+    if (!myOrders) {
+      yield put({
+        type: "REQUEST_FAILED",
+        message: i18n.t("P2P_NO_USER_ORDERS")
+      });
+      return;
+    }
+
+    order = myOrders.find(item => (item.id === order.id ? true : false));
+
+    if (!order) {
+      yield put({
+        type: "REQUEST_FAILED",
+        message: i18n.t("P2P_FAILED_TO_FIND_ORDER")
+      });
+
+      return;
+    }
+
+    let seller = order.sell.user;
+    seller.id = parseInt(seller.id);
+
+    let decodedToken = getDecodedAuthToken();
+    let myId = decodedToken.payload.id | 0;
+    let typeOfUser; //eslint-disable-line
+
+    typeOfUser = myId === seller.id ? "seller" : "buyer";
+
+    if (typeOfUser === "seller") {
+      yield put({
+        type: "CHAT_DETAILS_SETTER",
+        payload: {
+          myId,
+          currentOrder: order,
+          open: true, //"chat" opens to the seller, but the bundle wont
+          seller,
+          typeOfUser
+          //buyer is going to be defined when the seller select who he's going to chat
+        }
+      });
+
+      return;
+    }
+
+    //chat opens to the buyer
+    let buyer = { id: myId };
+    yield put({
+      type: "CHAT_DETAILS_SETTER",
+      payload: {
+        myId,
+        currentOrder: order,
+        open: true,
+        seller,
+        buyer,
+        typeOfUser,
+        currentRoom: undefined
+      }
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: "REQUEST_FAILED",
+      message: i18n.t("P2P_CHAT_FAILED_TO_OPEN_CHAT")
+    });
+  }
+}
+
+const CHANGE_SKELETON_ERROR_STATE = {
+  type: "CHANGE_SKELETON_ERROR_STATE",
+  state: true
+};
 
 export function* openChat(payload) {
   yield put({
@@ -16,9 +102,33 @@ export function* openChat(payload) {
   });
 }
 
+export function* openChatToTheSeller(payload) {
+  let { buyer } = payload;
+  if (!buyer) throw new Error("Failed to open chat");
+  let { seller, currentOrder } = window.store.getState().p2p.chatDetails;
+  let { id: adId } = currentOrder;
+  let { id: adOwnerId } = seller;
+  let { id: buyerId } = buyer || {};
+  yield put({
+    type: "CHAT_DETAILS_SETTER",
+    payload: {
+      open: true,
+      buyer
+    }
+  });
+  getChatBundle({ adOwnerId, adId, buyerId });
+}
 export function* closeChat() {
   yield put({
-    type: "CLOSE_CHAT_P2P_REDUCER"
+    type: "CHAT_DETAILS_SETTER",
+    payload: {
+      currentOrder: undefined,
+      open: false,
+      seller: undefined,
+      buyer: undefined,
+      typeOfUser: undefined,
+      currentRoom: undefined
+    }
   });
 }
 
@@ -55,6 +165,7 @@ export function* getP2PMyOrdersSaga(payload) {
       });
     }
   } catch (error) {
+    yield put(CHANGE_SKELETON_ERROR_STATE);
     yield put(internalServerError());
   }
 }
@@ -71,19 +182,31 @@ export function* getPaymentMethodsWhenBuying(payload) {
       coin
     );
 
-    let cripto = [{title: "LUNES", img: `images/icons/coins/lunes.png`, value: "lunes"}];
-    if(response.cripto){
-      response.cripto.forEach(val=>{
-        if(val.status=="active"){
-          cripto.push({id: val.id, title: val.name.toUpperCase(), img: `images/icons/coins/${val.abbreviation}.png`, value: val.abbreviation})
+    let cripto = [
+      { title: "LUNES", img: `images/icons/coins/lunes.png`, value: "lunes" }
+    ];
+    if (response.cripto) {
+      response.cripto.forEach(val => {
+        if (val.status == "active") {
+          cripto.push({
+            id: val.id,
+            title: val.name.toUpperCase(),
+            img: `images/icons/coins/${val.abbreviation}.png`,
+            value: val.abbreviation
+          });
         }
       });
     }
 
-    if(response.fiat){
-      response.fiat.forEach(val=>{
-        if(val.status=="active"){
-          cripto.push({id: val.id, title: val.name.toUpperCase(), img: `images/icons/fiat/${val.abbreviation}.png`, value: val.abbreviation})
+    if (response.fiat) {
+      response.fiat.forEach(val => {
+        if (val.status == "active") {
+          cripto.push({
+            id: val.id,
+            title: val.name.toUpperCase(),
+            img: `images/icons/fiat/${val.abbreviation}.png`,
+            value: val.abbreviation
+          });
         }
       });
     }
@@ -99,9 +222,18 @@ export function* getP2PHistorySaga(payload) {
     yield put({ type: "SET_LOADING_P2P", loading: true });
 
     let token = yield call(getAuthToken);
-    let response = yield call(p2pService.getHistory, token, payload.coin);
+    let response = yield call(
+      p2pService.getHistory,
+      token,
+      payload.coin,
+      payload.historyType
+    );
 
     if (response.errorMessage) {
+      yield put({
+        type: "REQUEST_FAILED",
+        message: i18n.t("P2P_FAILED_TO_GET_ORDERS")
+      });
       yield put({
         type: "GET_HISTORY_REDUCER",
         orders: []
@@ -113,6 +245,7 @@ export function* getP2PHistorySaga(payload) {
       });
     }
   } catch (error) {
+    yield put(CHANGE_SKELETON_ERROR_STATE);
     yield put(internalServerError());
   }
 }
@@ -127,6 +260,7 @@ export function* acceptOfferWhenBuying(payload) {
     yield put({ type: "SUCCESS_REQUEST", message: "" });
     yield put({ type: "BUY_SETTER", data: { isBuyLoading: false } });
   } catch (error) {
+    yield put(CHANGE_SKELETON_ERROR_STATE);
     yield put(internalServerError());
   }
 }
@@ -135,22 +269,16 @@ export function* getP2PFilterSaga(payload) {
   try {
     yield put({ type: "SET_LOADING_P2P", loading: true });
 
-    const { coin, typeOrder, coinBuy } = payload;
+    const { typeOrder, coinBuy } = payload;
 
     let token = yield call(getAuthToken);
-    let response = yield call(
-      p2pService.getFilter,
-      token,
-      coin,
-      typeOrder,
-      coinBuy
-    );
-
+    let response = yield call(p2pService.getFilter, token, typeOrder, coinBuy);
     yield put({
       type: "GET_FILTER_REDUCER",
-      orders: response
+      orders: !response ? [] : response.orders
     });
   } catch (error) {
+    yield put(CHANGE_SKELETON_ERROR_STATE);
     yield put(internalServerError());
   }
 }
@@ -201,6 +329,28 @@ export function* setP2POrdersCancelSaga(payload) {
       orderId: response
     });
   } catch (error) {
+    yield put(CHANGE_SKELETON_ERROR_STATE);
+
+    yield put(internalServerError());
+  }
+}
+
+export function* createSignatureSaga(payload) {
+  try {
+    yield put({ type: "SET_LOADING_P2P", loading: true });
+    let token = yield call(getAuthToken);
+
+    const response = yield call(
+      p2pService.createSignature,
+      token,
+      payload.data
+    );
+    if (!response) {
+      yield put(internalServerError());
+    } else {
+      yield put(modalSuccess(i18n.t("P2P_MODAL_SEND_INFO_SUCCESS")));
+    }
+  } catch (error) {
     yield put(internalServerError());
   }
 }
@@ -208,7 +358,12 @@ export function* setP2POrdersCancelSaga(payload) {
 export function* openDeposit(payload) {
   yield put({
     type: "OPEN_DEPOSIT_P2P_REDUCER",
-    iduser: payload.iduser
+    order: payload.order
+  });
+
+  yield put({
+    type: "CHAT_DETAILS_SETTER",
+    payload: { currentOrder: payload.order }
   });
 }
 
@@ -218,9 +373,16 @@ export function* closeDeposit() {
   });
 }
 
-export function* openAvaliation() {
+export function* setUserId() {
+  let token = decodeToken(getAuthToken());
+  let id = token.payload.id;
+  yield put({ type: "SET_USER_ID", id });
+}
+
+export function* openAvaliation(payload) {
   yield put({
-    type: "OPEN_AVALIATION_P2P_REDUCER"
+    type: "OPEN_AVALIATION_P2P_REDUCER",
+    order: payload.order
   });
 }
 
@@ -228,4 +390,45 @@ export function* closeAvaliation() {
   yield put({
     type: "CLOSE_AVALIATION_P2P_REDUCER"
   });
+}
+
+export function* setTabIconSaga(payload) {
+  yield put({
+    type: "SET_TAB_ICON_REDUCER",
+    tabIcon: payload.tabIcon
+  });
+}
+
+export function* getProfileSaga(payload) {
+  try {
+    yield put({ type: "SET_LOADING_P2P", loading: true });
+
+    const token = yield call(getAuthToken);
+    const response = yield call(p2pService.getProfile, token, payload.profile);
+    yield put({
+      type: "GET_PROFILE_REDUCER",
+      profile: response.data
+    });
+  } catch (error) {
+    yield put(CHANGE_SKELETON_ERROR_STATE);
+    yield put(internalServerError());
+  }
+}
+export function* setP2PRatingOrderSaga(payload) {
+  try {
+    let token = yield call(getAuthToken);
+
+    yield call(p2pService.setRatingOrder, token, payload.data);
+  } catch (error) {
+    yield put(internalServerError());
+  }
+}
+export function* confirmOrder(payload) {
+  try {
+    let token = yield call(getAuthToken);
+
+    yield call(p2pService.confirmOrder, token, payload.idOrder);
+  } catch (error) {
+    yield put(internalServerError());
+  }
 }

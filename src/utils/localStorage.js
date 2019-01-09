@@ -1,7 +1,7 @@
 import { encryptAes } from "./cryptography";
 const authToken = "auth.token";
 const userObj = "user.object";
-import base64 from 'base-64'
+import { decodeToken } from './cryptography'
 
 export const setAuthToken = token => {
   if (!token) return;
@@ -10,13 +10,11 @@ export const setAuthToken = token => {
 
 export const getAuthToken = () => JSON.parse(localStorage.getItem(authToken));
 
-export const getDecodedAuthToken = () => {
-  let token = getAuthToken()
-  token = token.split('.')
-  return {
-    head: JSON.parse(base64.decode(token[0])),
-    payload: JSON.parse(base64.decode(token[1]))
-  }
+export const getDecodedAuthToken = () => decodeToken(getAuthToken())
+
+export const getUserId = () => {
+  let token = getDecodedAuthToken()
+  return token.payload.id
 }
 
 export const setUserSeedWords = (seed, password) => {
@@ -68,7 +66,7 @@ export const setDefaultFiat = fiat => {
 
 export const getDefaultFiat = () => {
   let userStorage = getUserData();
-  return userStorage.defaultFiat ? userStorage.defaultFiat : "USD";
+  return userStorage && userStorage.defaultFiat ? userStorage.defaultFiat : "USD";
 };
 
 export const setDefaultCrypto = coin => {

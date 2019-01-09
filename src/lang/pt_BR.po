@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
-"POT-Creation-Date: 2018-11-15T00:29:43.796Z\n"
-"PO-Revision-Date: 2018-11-15T00:29:43.797Z\n"
+"POT-Creation-Date: 2018-12-15T21:53:05.610Z\n"
+"PO-Revision-Date: 2018-12-15T21:53:05.610Z\n"
 "Language: pt_BR\n"
 
 msgid "FEBRUARY"
@@ -122,6 +122,10 @@ msgstr "Senha"
 msgctxt "PASSWORD"
 msgid "PLACEHOLDER"
 msgstr "Senha"
+
+msgctxt "P2P"
+msgid "SETTINGS"
+msgstr "Configurações P2P"
 
 msgctxt "FEE"
 msgid "MESSAGE_SELECT"
@@ -247,6 +251,10 @@ msgctxt "SOON"
 msgid "BTN_COMMING"
 msgstr "Em breve"
 
+msgctxt "SOON"
+msgid "P2P_COMING"
+msgstr "Avaliação em breve disponível !"
+
 msgctxt "DESCRIPTION"
 msgid "LOGIN_SLIDE"
 msgid_plural "LOGIN_SLIDE"
@@ -308,8 +316,52 @@ msgid "RECHARGE"
 msgstr "Use criptomoedas para recarregar seu celular com créditos."
 
 msgctxt "DESCRIPTION"
+msgid "BUYCOINS"
+msgstr "Compre suas criptomoedas de forma rápida, simples e segura."
+
+msgctxt "DESCRIPTION"
 msgid "COINSALE"
 msgstr "Compre suas criptomoedas de forma rápida, simples e segura."
+
+msgctxt "DESCRIPTION"
+msgid "P2P_CREATE_OFFER"
+msgstr "Descrição"
+
+msgctxt "DESCRIPTION"
+msgid "P2P_PROFILE"
+msgstr "Descrição"
+
+msgctxt "DESCRIPTION"
+msgid "P2P_HEADER"
+msgstr "Descrição"
+
+msgctxt "DESCRIPTION"
+msgid "P2P_PLANS"
+msgstr ""
+"O serviço de assinatura da plataforma de negociações P2P será liberada em "
+"período de beta aberto por um mês a partir da data de lançamento. A partir "
+"desse período, o acesso a negociações na plataforma irá ocorrer através da "
+"compra de pacotes com pagamento em Lunes."
+
+msgctxt "DESCRIPTION"
+msgid "P2P_MONTHLY_SIGNATURE"
+msgstr "O plano básico de P2P te permitirá usar o sistema Lunes de P2P por um mês."
+
+msgctxt "DESCRIPTION"
+msgid "P2P_QUARTERLY_SIGNATURE"
+msgstr ""
+"O plano básico de P2P te permitirá usar o sistema Lunes de P2P por três "
+"meses."
+
+msgctxt "DESCRIPTION"
+msgid "P2P_SEMESTER_SIGNATURE"
+msgstr ""
+"O plano básico de P2P te permitirá usar o sistema Lunes de P2P por seis "
+"meses."
+
+msgctxt "DESCRIPTION"
+msgid "P2P_YEARLY_SIGNATURE"
+msgstr "O plano básico de P2P te permitirá usar o sistema Lunes de P2P por um ano."
 
 msgctxt "RULES"
 msgid "ALIAS"
@@ -340,6 +392,14 @@ msgstr "Envie escaneando o QR Code"
 msgctxt "ADDRESS"
 msgid "MODAL_SEND_TO"
 msgstr " para o endereço"
+
+msgctxt "ADDRESS"
+msgid "P2P_CREATE_OFFER"
+msgstr "Endereço de pagamento"
+
+msgctxt "ADDRESS"
+msgid "P2P_CHANGE"
+msgstr "Preencha o endereço para recebimento"
 
 msgctxt "INSTRUCTIONS"
 msgid "2FA"
@@ -445,8 +505,44 @@ msgid "RECHARGE_AMOUNT"
 msgstr "Seu saldo é insuficiente para realizar essa recarga"
 
 msgctxt "ERROR"
+msgid "BUYCOINS_INFO"
+msgstr "Procedimento de compra falhou"
+
+msgctxt "ERROR"
+msgid "INVITE"
+msgid_plural "INVITE"
+msgstr[0] "E-mail inválido"
+msgstr[1] "Preencha o e-mail destino"
+msgstr[2] "Aguarde o endereço carregar"
+
+msgctxt "ERROR"
+msgid "SEND_MAIL_INVITE"
+msgstr "Falha ao enviar"
+
+msgctxt "ERROR"
 msgid "COINSALE_INFO"
 msgstr "Procedimento de compra falhou"
+
+msgctxt "ERROR"
+msgid "P2P"
+msgid_plural "P2P"
+msgstr[0] "Informe a moeda de pagamento"
+msgstr[1] "Informe a quantidade"
+msgstr[2] "Informe o valor"
+msgstr[3] "Informe o endereço de recebimento"
+msgstr[4] "Informe uma breve descrição"
+msgstr[5] "Escolha o tipo"
+msgstr[6] "Informe a moeda de venda"
+
+msgctxt "BARCODE"
+msgid "PAYMENT_MESSAGE"
+msgstr ""
+"Não foi possível identificar o código de barras. Insira os números "
+"manualmente"
+
+msgctxt "SIZE"
+msgid "PAYMENT_FILE"
+msgstr "O tamanho do arquivo ultrapassa o limite estabelecido (3MB)"
 
 msgctxt "SUCCESS"
 msgid "MODAL_LEASING_MESSAGE"
@@ -481,10 +577,24 @@ msgid "ALIAS_CREATED"
 msgstr "Alias criado com sucesso!"
 
 msgctxt "SUCCESS"
+msgid "BUYCOINS"
+msgid_plural "BUYCOINS"
+msgstr[0] "Você realizou a compra com sucesso!"
+msgstr[1] "Visualize seu histórico de compras na a Histórico"
+
+msgctxt "SUCCESS"
+msgid "SEND_MAIL_INVITE"
+msgstr "Enviado com sucesso"
+
+msgctxt "SUCCESS"
 msgid "COINSALE"
 msgid_plural "COINSALE"
 msgstr[0] "Você realizou a compra com sucesso!"
 msgstr[1] "Visualize seu histórico de compras na a Histórico"
+
+msgctxt "SUCCESS"
+msgid "P2P_MODAL_SEND_INFO"
+msgstr "Avaliação realizada com sucesso"
 
 msgctxt "CUPON"
 msgid "INSTRUCTION_MODAL"
@@ -572,6 +682,18 @@ msgid "RECHARGE"
 msgstr "Recarga de Celular"
 
 msgctxt "TITLE"
+msgid "BUYCOINS"
+msgstr "COMPRAR CRIPTOMOEDAS"
+
+msgctxt "TITLE"
+msgid "BUYCOINS_PURCHASE_TAB"
+msgstr "Comprar moedas"
+
+msgctxt "TITLE"
+msgid "BUYCOINS_HISTORY_TAB"
+msgstr "Histórico"
+
+msgctxt "TITLE"
 msgid "COINSALE"
 msgstr "COMPRAR CRIPTOMOEDAS"
 
@@ -589,8 +711,9 @@ msgid_plural "SETTINGS"
 msgstr[0] "CARTEIRAS"
 msgstr[1] "CONSENTIMENTO"
 msgstr[2] "DEFINIÇÕES"
-msgstr[3] "DADOS DO USUÁRIO"
-msgstr[4] "2FA AUTENTICAÇÃO"
+msgstr[3] "P2P"
+msgstr[4] "DADOS DO USUÁRIO"
+msgstr[5] "2FA AUTENTICAÇÃO"
 
 msgctxt "USER"
 msgid "SETTINGS"
@@ -616,6 +739,10 @@ msgctxt "STATUS"
 msgid "LEASING_TITLE"
 msgstr "Status "
 
+msgctxt "STATUS"
+msgid "INVITE_TITLE"
+msgstr "Status"
+
 msgctxt "VERIFIED"
 msgid "SETTINGS_USER_ACCOUNT"
 msgstr "Conta verificada"
@@ -639,6 +766,10 @@ msgstr "2FA verificado"
 msgctxt "VERIFIED"
 msgid "SETTINGS_USER_2FA_NOT"
 msgstr "2FA não verificado"
+
+msgctxt "VERIFIED"
+msgid "EMAIL_NOT"
+msgstr "Email não verificado, favor verifique sua caixa de entrada"
 
 msgctxt "NAME"
 msgid "SETTINGS_USER_FIRST"
@@ -721,6 +852,10 @@ msgid "SETTINGS_USER"
 msgstr "Selecione"
 
 msgctxt "SELECT"
+msgid "BUY_PAYMENT"
+msgstr "Selecione um método de pagamento"
+
+msgctxt "SELECT"
 msgid "COINSALE_PAYMENT"
 msgstr "Selecione um método de pagamento"
 
@@ -735,6 +870,10 @@ msgstr "Estado"
 msgctxt "DATA"
 msgid "SETTINGS_USER_SAVE"
 msgstr "Salvar informações"
+
+msgctxt "DATA"
+msgid "P2P_PROFILE"
+msgstr "Dados"
 
 msgctxt "LUNES"
 msgid "SETTINGS_ALIAS_WALLET"
@@ -824,6 +963,22 @@ msgid "SET_DEFINITIONS_LABEL"
 msgstr "Criptomoeda Padrão"
 
 msgctxt "COIN"
+msgid "BUY_SEL"
+msgstr "Selecione uma moeda"
+
+msgctxt "COIN"
+msgid "BUY_PAYMENT"
+msgstr "Moeda para pagamento"
+
+msgctxt "COIN"
+msgid "BUY_METHOD"
+msgstr "Criptomoedas"
+
+msgctxt "COIN"
+msgid "BUY_ERROR"
+msgstr "Selecione uma moeda"
+
+msgctxt "COIN"
 msgid "COINSALE_SEL"
 msgstr "Selecione uma moeda"
 
@@ -878,10 +1033,20 @@ msgstr[1] "Confirme seus dados para concluir sua recarga"
 msgstr[2] "Você será cobrado da sua carteira "
 
 msgctxt "CONFIRM"
+msgid "BUYCOINS"
+msgid_plural "BUYCOINS"
+msgstr[0] "envio"
+msgstr[1] "Insira sua senha e confirme o "
+
+msgctxt "CONFIRM"
 msgid "COINSALE"
 msgid_plural "COINSALE"
 msgstr[0] "envio"
 msgstr[1] "Insira sua senha e confirme o "
+
+msgctxt "CONFIRM"
+msgid "P2P_BUTTON"
+msgstr "Concluir"
 
 msgctxt "FAILURE"
 msgid "MODAL_LEASING_MESSAGE"
@@ -915,9 +1080,26 @@ msgctxt "EMAIL"
 msgid "BTN_RECEIVE"
 msgstr "E-mail"
 
+msgctxt "EMAIL"
+msgid "INVITE_TITLE"
+msgstr "E-mail"
+
+msgctxt "EMAIL"
+msgid "INVITE_ERROR"
+msgstr ""
+"Seu e-mail não foi verificado, por favor tente novamente clicando no botão "
+"a baixo."
+
+msgctxt "EMAIL"
+msgid "INVITE_SUCCESS"
+msgstr "E-mail confirmado."
+
 msgctxt "SEED"
 msgid "PLACEHOLDER"
-msgstr "Seed Words"
+msgstr ""
+"Anote a seed que você gerou (12 palavras em inglês) em um local bem seguro. "
+"Somente você tem acesso a ela e através das 12 palavras que é possível "
+"acessar sua carteira na blockchain."
 
 msgctxt "SEED"
 msgid "BTN_IMPORT"
@@ -946,6 +1128,10 @@ msgstr "Enviar"
 msgctxt "SEND"
 msgid "MODAL_TO_SEND"
 msgstr " Você está enviando "
+
+msgctxt "SEND"
+msgid "INVITE_BUTTON"
+msgstr "Enviar"
 
 msgctxt "DISABLED"
 msgid "BTN"
@@ -1075,6 +1261,10 @@ msgctxt "LABEL"
 msgid "LEASING_BALANCE"
 msgstr "Seu saldo"
 
+msgctxt "LABEL"
+msgid "ACCEPT_INVITE"
+msgstr "Você foi convidado por "
+
 msgctxt "ASSETS"
 msgid "MENU"
 msgstr "Tokens"
@@ -1178,12 +1368,20 @@ msgstr[2] "Até R$1.000,00 - 6%"
 msgstr[3] "De R$1.000,01 a R$3.000,00 - 5%"
 
 msgctxt "PAY"
+msgid "BUY_ERROR_COIN"
+msgstr "Selecione uma moeda de pagamento"
+
+msgctxt "PAY"
 msgid "COINSALE_ERROR_COIN"
 msgstr "Selecione uma moeda de pagamento"
 
 msgctxt "PURCHASE"
 msgid "MENU"
 msgstr "Comprar"
+
+msgctxt "PURCHASE"
+msgid "P2P_TAB"
+msgstr "Compra"
 
 msgctxt "COUPONS"
 msgid "MENU"
@@ -1227,6 +1425,10 @@ msgctxt "SHARE"
 msgid "BTN_RECEIVE"
 msgstr "Compartilhar"
 
+msgctxt "SHARE"
+msgid "INVITE_LINK"
+msgstr "Link de compartilhamento"
+
 msgctxt "BALANCE"
 msgid "WALLET"
 msgstr "Saldo"
@@ -1234,6 +1436,14 @@ msgstr "Saldo"
 msgctxt "BALANCE"
 msgid "LEASING"
 msgstr "Saldo Total Lunes"
+
+msgctxt "BALANCE"
+msgid "INVITE_ACCUMULATED"
+msgstr "Saldo acumulado"
+
+msgctxt "BALANCE"
+msgid "INVITE_NO"
+msgstr "Saldo indisponível"
 
 msgctxt "TEXT"
 msgid "LEASING_HELP"
@@ -1263,10 +1473,50 @@ msgstr[0] "Você está enviando "
 msgstr[1] " para "
 
 msgctxt "TEXT"
+msgid "BUYCOINS_FEE"
+msgid_plural "BUYCOINS_FEE"
+msgstr[0] "Você está enviando "
+msgstr[1] " para "
+
+msgctxt "TEXT"
+msgid "INVITE"
+msgstr ""
+"Você e o usuário convidado vão ganhar 5 Lunes após o usuário que você "
+"convidou se cadastrar e transacionar dentro da carteira, seja recebendo uma "
+"moeda ou executando algum serviço."
+
+msgctxt "TEXT"
 msgid "COINSALE_FEE"
 msgid_plural "COINSALE_FEE"
 msgstr[0] "Você está enviando "
 msgstr[1] " para "
+
+msgctxt "TEXT"
+msgid "P2P_STATUS"
+msgid_plural "P2P_STATUS"
+msgstr[0] "Cancelado"
+msgstr[1] "Andamento"
+msgstr[2] "Concluído"
+
+msgctxt "TEXT"
+msgid "P2P"
+msgid_plural "P2P"
+msgstr[0] "Classifique o vendedor"
+msgstr[1] "Utilize o QR CODE ou endereço da carteira abaixo para realizar o deposito"
+msgstr[2] "Copiar código"
+msgstr[3] "Concluir"
+msgstr[4] "Um Player se interessou pela sua oferta e quer abrir um chat com você!"
+msgstr[5] "Conversar"
+msgstr[6] "Agora não"
+msgstr[7] "Você está mandando"
+msgstr[8] "Para pagamento na plataforma P2P"
+msgstr[9] "O fee da sua transação na rede Lunes é"
+msgstr[10] ""
+"Parabéns, você acaba de fazer uma venda. Assim que você se certificar que o "
+"depósito foi realizado, confirme que a transação foi um sucesso!"
+msgstr[11] "Classifique o comprador"
+msgstr[12] "Criado com sucesso"
+msgstr[13] "Concluir e voltar"
 
 msgctxt "START"
 msgid "LEASING_BT"
@@ -1295,6 +1545,18 @@ msgstr "Node"
 msgctxt "BUTTON"
 msgid "VOUCHER"
 msgstr "Resgatar"
+
+msgctxt "BUTTON"
+msgid "INVITE_COPY"
+msgstr "Copiar"
+
+msgctxt "BUTTON"
+msgid "INVITE_SHARE"
+msgstr "Compartilhar"
+
+msgctxt "BUTTON"
+msgid "INVITE_TEXT"
+msgstr "Sacar"
 
 msgctxt "INFO"
 msgid "SETTINGS_HEADER"
@@ -1326,6 +1588,20 @@ msgstr[1] ""
 "automaticamente devolvidas ao endereço Lunes da moeda."
 
 msgctxt "INFO"
+msgid "INSTRUCTION_MODAL_BUY"
+msgid_plural "INSTRUCTION_MODAL_BUY"
+msgstr[0] ""
+"O tempo da operação varia de acordo com a rede da moeda escolhida como meio "
+"de pagamento."
+msgstr[1] ""
+"A taxa de uso do serviço é de 5%. Ou seja, a cotação usada como base na "
+"carteira é acrescida dos 5% para a manutenção do serviço pela Lunes."
+msgstr[2] ""
+"Usando criptomoeda como forma de pagamento, ao finalizar a compra as moedas "
+"serão automaticamente descontadas da sua carteira Lunes e a escolhida para "
+"comprar será enviada para o endereço da moeda em sua carteira Lunes."
+
+msgctxt "INFO"
 msgid "INSTRUCTION_MODAL_COINSALE"
 msgid_plural "INSTRUCTION_MODAL_COINSALE"
 msgstr[0] ""
@@ -1346,6 +1622,10 @@ msgstr "Para confirmar sua transação, insira sua senha e complete o"
 msgctxt "CONFIRMATION"
 msgid "RECHARGE_PASS"
 msgstr "Insira sua senha e complete o"
+
+msgctxt "CONFIRMATION"
+msgid "P2P_CREATE_OFFER_BUTTON"
+msgstr "CRIAR ANÚNCIO"
 
 msgctxt "HISTORY"
 msgid "PAYMENT_TEXT"
@@ -1377,6 +1657,10 @@ msgstr "Identificação Pessoal"
 msgctxt "DATE"
 msgid "PAYMENT_DUE"
 msgstr "Data de Vencimento"
+
+msgctxt "DATE"
+msgid "P2P_PROFILE_USER"
+msgstr "Usuário desde"
 
 msgctxt "DOC"
 msgid "PAYMENT_TITLE"
@@ -1504,6 +1788,10 @@ msgid "RECHARGE_BT"
 msgstr "EFETUAR RECARGA "
 
 msgctxt "INIT"
+msgid "BUY_BT"
+msgstr "COMPRAR"
+
+msgctxt "INIT"
 msgid "COINSALE_BT"
 msgstr "COMPRAR"
 
@@ -1547,25 +1835,97 @@ msgctxt "INCORRECT"
 msgid "ALIAS_INFORMED"
 msgstr "O alias informado é incorreto!"
 
-msgctxt "COINSALE"
+msgctxt "BUYCOINS"
 msgid "MENU"
 msgstr "Comprar"
+
+msgctxt "PREFIX"
+msgid "BUYCOINS_PACK_TEXT"
+msgstr "Você está comprando "
 
 msgctxt "PREFIX"
 msgid "COINSALE_PACK_TEXT"
 msgstr "Você está comprando "
 
 msgctxt "SUFIX"
+msgid "BUYCOINS_PACK_TEXT"
+msgstr " e receberá"
+
+msgctxt "SUFIX"
 msgid "COINSALE_PACK_TEXT"
 msgstr " e receberá"
+
+msgctxt "PACK"
+msgid "BUY_ERROR"
+msgstr "Selecione um pacote"
 
 msgctxt "PACK"
 msgid "COINSALE_ERROR"
 msgstr "Selecione um pacote"
 
 msgctxt "RELOAD"
+msgid "BUY_ERROR"
+msgstr "Erro. Tente recarregar a página."
+
+msgctxt "RELOAD"
 msgid "COINSALE_ERROR"
 msgstr "Erro. Tente recarregar a página."
+
+msgctxt "CREDIT"
+msgid "BUY"
+msgstr "Pagamento"
+
+msgctxt "CREDIT"
+msgid "COINSALE"
+msgstr "Pagamento"
+
+msgctxt "INVITE"
+msgid "MENU"
+msgstr "Convites"
+
+msgctxt "INVITE"
+msgid "INVITE_TITLE"
+msgstr "Convites"
+
+msgctxt "COUPON"
+msgid "INVITE_TITLE"
+msgstr "Cupom"
+
+msgctxt "INVITATIONS"
+msgid "INVITE_SEND"
+msgstr "Convites enviados"
+
+msgctxt "INVITATIONS"
+msgid "INVITE_CONFIRMED"
+msgstr "Convites confirmados"
+
+msgctxt "WITHDRAW"
+msgid "INVITE"
+msgstr "Sacado com sucesso!"
+
+msgctxt "SENT"
+msgid "INVITE_STATUS"
+msgstr "Enviado"
+
+msgctxt "REGISTERED"
+msgid "INVITE_STATUS"
+msgstr "Registrado"
+
+msgctxt "TRANSACTED"
+msgid "INVITE_STATUS"
+msgstr "Transacionado"
+
+msgctxt "REDEEMED"
+msgid "INVITE_STATUS"
+msgstr "Resgatado"
+
+msgctxt "RESEND"
+msgid "BTN_INVITE"
+msgstr ""
+
+msgctxt "COINSALE"
+msgid "MENU"
+msgstr "Comprar"
 
 msgctxt "WAITING"
 msgid "COINSALE_STATUS"
@@ -1579,6 +1939,102 @@ msgctxt "CANCELED"
 msgid "COINSALE_STATUS"
 msgstr "Cancelado"
 
-msgctxt "CREDIT"
-msgid "COINSALE"
+msgctxt "PLACEHOLDER"
+msgid "P2P_CREATE_OFFER_DESCRIPTION"
+msgstr ""
+"Coloque informações complementares sobre o anúncio que os compradores "
+"precisam saber."
+
+msgctxt "PLACEHOLDER"
+msgid "P2P_CREATE_OFFER_ADDRESS"
+msgstr "Endereço"
+
+msgctxt "NEGOTIATION"
+msgid "P2P_CREATE_OFFER"
+msgstr "Método de negociação"
+
+msgctxt "ANNOUNCED"
+msgid "P2P_CREATE_OFFER_COIN"
+msgstr "Moeda anunciada"
+
+msgctxt "PAYMENT"
+msgid "P2P_CREATE_OFFER_COIN"
+msgstr "Moeda de pagamento"
+
+msgctxt "PAYMENT"
+msgid "P2P_HEADER"
 msgstr "Pagamento"
+
+msgctxt "VALUES"
+msgid "P2P_CREATE_OFFER_COIN"
+msgstr "Entre com a quantidade a vender e a quantidade a receber"
+
+msgctxt "ORDER"
+msgid "P2P_NO"
+msgstr "Nenhuma ordem"
+
+msgctxt "NEGOTIATIONS"
+msgid "P2P_PROFILE"
+msgstr "Negociações"
+
+msgctxt "CONCLUDED"
+msgid "P2P_PROFILE"
+msgstr "Positivas"
+
+msgctxt "FEEDBACK"
+msgid "P2P_PROFILE"
+msgstr "Avaliações"
+
+msgctxt "OFFER"
+msgid "P2P"
+msgstr "Vende"
+
+msgctxt "SELLS"
+msgid "P2P"
+msgstr "Aceita"
+
+msgctxt "NEGOTIATE"
+msgid "P2P_BUTTON"
+msgstr "Negociar"
+
+msgctxt "UNITY"
+msgid "P2P_VALUE"
+msgstr "Unid. "
+
+msgctxt "BUY"
+msgid "P2P_HEADER"
+msgid_plural "P2P_HEADER"
+msgstr[0] "Compra"
+msgstr[1] "Comprar"
+
+msgctxt "AGAIN"
+msgid "P2P_TRY"
+msgstr "Tentar novamente"
+
+msgctxt "SIGNATURE"
+msgid "P2P_MONTHLY"
+msgstr "Mensal"
+
+msgctxt "SIGNATURE"
+msgid "P2P_QUARTERLY"
+msgstr "Trimestral"
+
+msgctxt "SIGNATURE"
+msgid "P2P_SEMESTER"
+msgstr "Semestral"
+
+msgctxt "SIGNATURE"
+msgid "P2P_YEARLY"
+msgstr "Anual"
+
+msgctxt "LISTING"
+msgid "P2P_MY"
+msgstr "Meus anúncios"
+
+msgctxt "SALE"
+msgid "P2P_TAB"
+msgstr "Venda"
+
+msgctxt "RECEIPT"
+msgid "P2P_BUTTON_CONFIRM"
+msgstr "Confirmar Recebimento"

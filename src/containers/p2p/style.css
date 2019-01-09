@@ -30,7 +30,7 @@
 }
 
 :local .baseWidget {
-  composes: bgPurpleLight from "../../components/bases/colorBase.css";
+  composes: bgPurpleDark from "../../components/bases/colorBase.css";
   position: absolute;
   bottom: 0px;
   right: 16px;
@@ -57,7 +57,7 @@
 :local .tabContent {
   display: flex;
   width: 100%;
-  margin-top: 10px;
+  margin-top: -20px;
   justify-content: space-between;
   composes: bgPurpleDefault from "../../components/bases/colorBase.css";
   border-bottom: solid 1px rgba(0, 0, 0, 0.3);
@@ -87,16 +87,21 @@
 }
 
 :local .baseUserProfile {
-  max-height: 490px;
+  height: calc(95vh - 200px);
   overflow: auto;
 }
 
-:local(.cardProfile) {
+:local .cardProfile {
   composes: bgPurpleDefault from "../../components/bases/colorBase.css";
   min-height: 195px;
   width: 97%;
   margin: 1px 0px 0px 0px;
   overflow: hidden;
+}
+
+:local .cardProfileLast {
+  composes: cardProfile;
+  margin-bottom: 10%;
 }
 
 :local(.userInfo) {
@@ -136,7 +141,6 @@
   font-size: 14px;
   text-align: center;
   margin-top: 35px;
-
 }
 
 :local(.spanDescription) {
@@ -174,7 +178,7 @@
 }
 
 :local(.userFeedback) {
-  margin: 10% 0% 0% 10%;
+  margin: 10% 0% 10% 10%;
   width: 80%;
 }
 
@@ -205,9 +209,9 @@
 
 :local .textReturn {
   font-size: 16px;
-  text-align:center;
-  display:block;
-  padding-top:140px;
+  text-align: center;
+  display: block;
+  padding-top: 140px;
   padding-bottom: 40px;
 }
 
@@ -221,7 +225,8 @@
   text-align: right;
 }
 :local .content {
-  height: 400px;
+  height: calc(92vh - 200px);
+  /* height: 400px; */
   overflow: auto;
 }
 
@@ -265,8 +270,40 @@
 }
 
 :local .headerActionFilter {
-  composes: bgPurpleDefault from "../../components/bases/colorBase.css";
+  composes: bgPurpleLight from "../../components/bases/colorBase.css";
+  border-radius: 10px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+  border-bottom: 1px solid #6351a8;
   padding: 10px;
+}
+
+:local(.sort img) {
+  position: relative;
+  height: 20px;
+  left: 5px;
+  top: 7px;
+}
+
+/* . SCROLLBAR */
+:local(.baseWidget *::-webkit-scrollbar) {
+  background-color: #654fa4;
+  border-radius: 6px;
+}
+
+:local(.baseWidget *::-webkit-scrollbar-thumb) {
+  background-color: #68f285;
+  border-radius: 6px;
+}
+
+:local(.scrollSelect *::-webkit-scrollbar) {
+  background-color: transparent;
+  border-radius: 6px;
+}
+
+:local(.scrollSelect *::-webkit-scrollbar-thumb) {
+  background-color: #654fa4;
+  border-radius: 6px;
 }
 
 /* BUTTONS */
@@ -285,7 +322,7 @@
     height: 90vh;
     width: 100%;
   }
-  
+
   :local .baseWidgetClose {
     position: absolute;
     bottom: calc(-100vh -40px);

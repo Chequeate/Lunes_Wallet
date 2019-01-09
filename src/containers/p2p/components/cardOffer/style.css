@@ -31,11 +31,42 @@
   padding-bottom: 3px;
 }
 
+:local .dateCreate {
+  opacity: 0.5;
+  font-size: 8px;
+  display: inline-block;
+}
 
+:local .hourCreate {
+  opacity: 0.5;
+  font-size: 8px;
+  margin-left: 10px;
+
+}
+
+:local .cancelOffer {
+  display: inline;
+  width: 9.7px;
+  height: 9.7px;
+  
+}
+
+:local .unit {
+  display: inline-block;
+  margin-left: 10px;
+  font-size: 8px;
+}
+
+:local .defaultFiat {
+  display: inline-block;
+  composes: textGreen;
+  font-size: 8px;
+}
 
 :local .textSmall {
   composes: textGreen;
-  font-size: 11px;
+  font-size: 8px;
+  margin-right: 10px;
   display: block;
 }
 
@@ -49,9 +80,9 @@
 
 :local .arrowPrice {
   composes: textGreen;
-  margin-left: -20px;
+  margin-left: -35px;
   float: left;
-  margin-top: 2px;
+  margin-top: 20px;
   max-width: 14px;
 }
 
@@ -75,6 +106,15 @@
 :local .btContinue {
   composes: buttonEnable from "../../../../components/bases/buttonBase.css";
   width: 240px;
+}
+:local .btRating {  
+  composes: buttonBorderGreen from "../../../../components/bases/buttonBase.css";  
+  width: 80px;
+  height: 20px;
+  text-align: center;
+  padding: 0px;
+  font-size: 10px;
+  color: #68f285;
 }
 
 :local(.btnClose) {
@@ -132,10 +172,6 @@
     font-size: 12px;
   }
 
-  :local .hours {
-    display: none;
-  }
-
   :local .textDetails {
     width: calc(100% - 10px);
     padding: 5px;
@@ -147,15 +183,4 @@
   :local .btContinue {
     width: 100%;
   }
-}
-
-/* . SCROLLBAR */
-::-webkit-scrollbar {
-  background-color: #654fa4;
-  border-radius: 6px;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: #68f285;
-  border-radius: 6px;
 }

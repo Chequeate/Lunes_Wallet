@@ -13,11 +13,13 @@ import { getAuthToken, getUserSeedWords } from "../../../utils/localStorage";
 // SERVICES
 import AuthService from "../../../services/authService";
 import CoinService from "../../../services/coinService";
+import SettingsService from "../../../services/settingsService";
 import TransactionService from "../../../services/transaction/transactionService";
 
 const authService = new AuthService();
 const transactionService = new TransactionService();
 const coinService = new CoinService();
+const settingsService = new SettingsService();
 
 export function* getTwoFactorAuth() {
   try {
@@ -198,6 +200,133 @@ export function* getAliases(action) {
     }
   } catch (error) {
     console.warn("error", error);
+    yield put(internalServerError());
+  }
+}
+
+export function* getSignaturesSaga() {
+  try {
+    yield put({
+      type: "SET_LOADING_P2P",
+      loadingP2P: true
+    });
+
+    let token = yield call(getAuthToken);
+    let response = yield call(settingsService.getSignatures, token);
+
+    let signatures = [];
+    if (response) {
+      signatures = response.data;
+    }
+
+    yield put({
+      type: "GET_SIGNATURES_P2P_REDUCER",
+      signatures: signatures
+    });
+
+    yield put({ type: "SET_LOADING_P2P", loadingP2P: false });
+  } catch (error) {
+    yield put(internalServerError());
+  }
+}
+
+export function* getSignatureSaga() {
+  try {
+    let token = yield call(getAuthToken);
+    let response = yield call(settingsService.getSignature, token);
+
+    let mySignature = [];
+    if (response) {
+      mySignature = response.data;
+    }
+
+    yield put({
+      type: "GET_SIGNATURE_P2P_REDUCER",
+      mySignature: mySignature
+    });
+  } catch (error) {
+    yield put(internalServerError());
+  }
+}
+
+export function* signSignatureSaga(payload) {
+  const coin = "lunes";
+
+  let seed = yield call(getUserSeedWords);
+  let token = yield call(getAuthToken);
+
+  // pega o servico disponivel
+  let lunesWallet = yield call(transactionService.p2pService, coin, token);
+
+  const payloadTransaction = {
+    coin: coin,
+    fromAddress: payload.data.fromAddress,
+    toAddress: lunesWallet.address,
+    lunesUserAddress: payload.data.lunesUserAddress,
+    amount: payload.data.amount,
+    fee: payload.data.fee,
+    feePerByte: payload.data.feePerByte,
+    feeLunes: payload.data.feeLunes,
+    price: payload.data.price,
+    decimalPoint: lunesWallet.decimalPoint
+  };
+
+  let response = yield call(
+    transactionService.transaction,
+    lunesWallet.id,
+    payloadTransaction,
+    lunesWallet,
+    decryptAes(seed, payload.data.user),
+    token
+  );
+
+
+  const transacao_obj = JSON.parse(response.config.data);
+
+  if (response) {
+    const payload_elastic = {
+      txID: transacao_obj.txID,
+      planId: payload.data.planId
+    };
+
+  yield call(settingsService.signSignature, token, payload_elastic);
+  }
+}
+
+export function* getFeeP2PSaga(payload) {
+  try {
+    yield put({
+      type: "SET_LOADING_REDUCER",
+      loading: true
+    });
+
+    const coin = "lunes";
+    let token = yield call(getAuthToken);
+
+    // pega o servico disponivel
+    let lunesWallet = yield call(transactionService.p2pService, coin, token);
+
+    let response = yield call(
+      coinService.getFee,
+      payload.coin,
+      payload.fromAddress,
+      lunesWallet.toAddress,
+      payload.amount,
+      payload.decimalPoint
+    );
+    if (!response.fee) {
+      yield put({
+        type: "SET_LOADING_REDUCER",
+        payload: false
+      });
+      yield put(internalServerError());
+    }
+
+    yield put({
+      type: "GET_FEE_P2P_REDUCER",
+      fee: response
+    });
+  } catch (error) {
     yield put(internalServerError());
   }
 }

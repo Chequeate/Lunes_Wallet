@@ -13,6 +13,7 @@ import assets from "../assets/redux/assetsReducer";
 import recharge from "../recharge/redux/rechargeReducer";
 import p2p from "../p2p/redux/p2pReducer";
 import buy from "../buycoin/redux/buyReducer";
+import invite from "../invite/redux/inviteReducer";
 
 const sagaMiddleware = new createSagaMiddleware();
 
@@ -27,9 +28,10 @@ const Store = createStore(
     payment,
     error,
     assets,
-    recharge, 
+    recharge,
     p2p,
-    buy
+    buy,
+    invite
   }),
 
   applyMiddleware(sagaMiddleware)

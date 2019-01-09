@@ -344,12 +344,22 @@
   width: 40px;
   height: 40px;
 }
-:local(.linkMenuP2P) {
+:local .linkMenuP2P {
   top: 100%;
   margin-top: -100px;
   opacity: 0.5;
   background-color: transparent;
   border: none;
+  cursor: pointer;
+}
+
+:local .linkMenuP2PActive {
+  top: 100%;
+  margin-top: -100px;
+  opacity: 1;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
 }
 
 :local .linkMenuP2P:hover {

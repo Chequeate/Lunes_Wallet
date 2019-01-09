@@ -4,18 +4,18 @@ import PropTypes from "prop-types";
 // REDUX
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { closeChat } from "../../redux/p2pAction";
+import { closeChat, setUserProfile } from "../../redux/p2pAction";
 
 // UTILS
 import { formatDate } from "../../../../utils/numbers";
 import { getDefaultFiat } from "../../../../utils/localStorage";
-import { encryptMd5 } from "../../../../utils/cryptography";
+import { getProfileImg } from "../../../../utils/user";
 
 // MATERIAL UI
 import { Grid } from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
 
-import { FavoriteBorder, ArrowForward } from "@material-ui/icons/";
+import { ArrowForward } from "@material-ui/icons/";
 import { ArrowBack } from "@material-ui/icons/";
 import { KeyboardArrowDown } from "@material-ui/icons";
 
@@ -23,7 +23,6 @@ import { KeyboardArrowDown } from "@material-ui/icons";
 import StarVotes from "../starvotes";
 import HeaderDetails from "../headerdetails/index";
 
-import UserProfile from "../../userProfile";
 // STYLE
 import style from "./style.css";
 
@@ -33,11 +32,12 @@ class Header extends React.Component {
     this.state = {
       showHeaderDetails: true,
       arrowDown: false,
-      showPerfil: false
+      name: undefined
     };
   }
   onClickPerfil() {
-    this.setState({ showPerfil: !this.state.showPerfil });
+    const { order, setUserProfile } = this.props;
+    setUserProfile(order.sell.user);
   }
   closeChat = () => {
     const { closeChat } = this.props;
@@ -50,38 +50,44 @@ class Header extends React.Component {
       arrowDown: !this.state.arrowDown
     });
   };
-  renderPerfil() {
-    return <UserProfile />;
+
+  getUserPhoto() {
+    let { typeOfUser, buyer, seller } = this.props.chatDetails;
+    if (typeOfUser === "seller") {
+      if (!buyer) return;
+      return getProfileImg(300, buyer && buyer.email);
+    } else {
+      return getProfileImg(300, seller && seller.email);
+    }
   }
-  rederPictureGravatar(email){
-    const defaultImg = "https://luneswallet.app/images/icons/p2p/lunio-user300x300.jpg";
-    return "https://s.gravatar.com/avatar/"+encryptMd5(email.toLowerCase())+"?s=300"+"&d="+defaultImg;
-  }
+
+  getName = () => {
+    let { typeOfUser, buyer, seller } = this.props.chatDetails;
+    if (typeOfUser === "buyer") return seller.name + " " + seller.surname;
+    else return buyer ? buyer.name + " " + buyer.surname : undefined;
+  };
   render() {
     const { order } = this.props;
     const dateCreate = formatDate(order.createdAt, "DM");
-    let { showPerfil } = this.state;
 
     let defaultFiat = getDefaultFiat();
     const unitValue = order.unitValue[defaultFiat.toLowerCase()];
-    const total =  unitValue * order.sell.amount;
+    const total = unitValue * order.sell.amount;
 
-    if (showPerfil) {
-      return this.renderPerfil();
-    }
-    
+    let name = this.getName();
+
     return (
-      <div className={style.topBar}>
+      <div className={style.topBar + " chatHeader"}>
         <div className={style.header}>
           <Grid container>
             <Grid item xs={1}>
               <ArrowBack className={style.arrowBack} onClick={this.closeChat} />
             </Grid>
-            <Grid item xs={1} sm={2}>
+            <Grid item xs={2} sm={2}>
               <Avatar
                 alt="Avatar"
                 className={style.avatar}
-                src={this.rederPictureGravatar(order.sell.user.email)}
+                src={this.getUserPhoto()}
               />
             </Grid>
             <Grid item xl={5}>
@@ -89,7 +95,7 @@ class Header extends React.Component {
                 className={style.textGreen}
                 onClick={() => this.onClickPerfil()}
               >
-                {order.sell.user.name} {order.sell.user.surname}
+                {name}
               </span>
               <span className={style.textSmall}>{dateCreate}</span>
             </Grid>
@@ -98,11 +104,9 @@ class Header extends React.Component {
                 <StarVotes votes={order.sell.user.rating} />
               </div>
             </Grid>
+          </Grid>
 
-            <Grid item xs={1}>
-              <FavoriteBorder className={style.fav} />
-            </Grid>
-
+          <Grid container>
             <Grid item xs={3} />
             <Grid item xs={4}>
               <div className={style.card}>{order.sell.amount}</div>
@@ -111,7 +115,9 @@ class Header extends React.Component {
               <ArrowForward className={style.arrowPrice} />
             </Grid>
             <Grid item xs={4}>
-              <div className={style.card}>{defaultFiat} {total.toFixed(2)}</div>
+              <div className={style.card}>
+                {defaultFiat} {total.toFixed(2)}
+              </div>
             </Grid>
             <Grid
               container
@@ -141,15 +147,18 @@ class Header extends React.Component {
 
 Header.propTypes = {
   closeChat: PropTypes.func.isRequired,
-  order: PropTypes.object
+  order: PropTypes.object,
+  setUserProfile: PropTypes.func,
+  chatDetails: PropTypes.object
 };
 
 const mapStateToProps = store => ({
-  order: store.p2p.chat.iduser
+  order: store.p2p.chatDetails.currentOrder,
+  chatDetails: store.p2p.chatDetails
 });
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ closeChat }, dispatch);
+  bindActionCreators({ closeChat, setUserProfile }, dispatch);
 
 export default connect(
   mapStateToProps,

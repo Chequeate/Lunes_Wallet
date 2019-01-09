@@ -1,5 +1,5 @@
 import i18n from "./i18n";
-import { countriesInfo } from "../constants/user.js"
+import { countriesInfo } from "../constants/user.js";
 
 export const convertBiggestCoinUnit = (value, decimal) => {
   let number = "1";
@@ -17,11 +17,13 @@ export const convertSmallerCoinUnit = (value, decimal) => {
   return parseInt(value * parseInt(number));
 };
 
-export const percentCalc = (first, last) => {
+export const percentCalcByRange = (first, last) => {
   let result = (last * 100) / first - 100;
 
   return result.toFixed(2);
 };
+
+export const percentCalc = (first, last) => (first * last) / 100;
 
 export const formatDate = (date, type = "DMY", monthNumber = false) => {
   /* TYPES
@@ -61,6 +63,8 @@ export const formatDate = (date, type = "DMY", monthNumber = false) => {
     return day;
   } else if (type === "DM") {
     return day + "/" + month;
+  } else if (type === "DMI") {
+    return day + "/" + month.toString().substr(0, 3);
   } else if (type === "H") {
     return hours;
   } else if (type === "HM") {
@@ -74,33 +78,39 @@ export const formatDate = (date, type = "DMY", monthNumber = false) => {
 
 export const convertISO8601 = (iso) => {
   let d = new Date(iso)
+  let minutes = d.getMinutes().toString()
+  minutes = minutes < 10 ? '0'.concat(minutes) : minutes
   return {
-    hour: `${d.getHours() + 1}:${d.getMinutes()}`,
+    hour: `${d.getHours() + 1}:${minutes}`,
     date: `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`
-  }
-}
+  };
+};
 export const commonToSatoshi = (value, zeros = 8) => {
-  return parseInt(value * 10**zeros)
-}
+  return parseInt(value * 10 ** zeros);
+};
 export const satoshiToCommon = (value, zeros = 8) => {
-  return parseFloat(value / 10**zeros)
-}
+  return parseFloat(value / 10 ** zeros);
+};
 export const localCurrency = (number, currency) => {
   if (!currency) {
-    let { user } = window.store.getState().user
-    let { country } = user
-    country = country ? country.replace(/\s/gmi, '_').toLowerCase() : undefined
-    let countryInfo = countriesInfo[country]
-    let currencyAbbr = countryInfo && countryInfo.currencyAbbr
-    ? countryInfo.currencyAbbr : 'USD'
-    return number.toLocaleString('it-IT', {
-      style: 'currency', currency: currencyAbbr
-    })
+    let { user } = window.store.getState().user;
+    let { country } = user;
+    country = country ? country.replace(/\s/gim, "_").toLowerCase() : undefined;
+    let countryInfo = countriesInfo[country];
+    let currencyAbbr =
+      countryInfo && countryInfo.currencyAbbr
+        ? countryInfo.currencyAbbr
+        : "USD";
+    return number.toLocaleString("it-IT", {
+      style: "currency",
+      currency: currencyAbbr
+    });
   }
-  return number.toLocaleString('it-IT', {
-    style: 'currency', currency
-  })
-}
+  return number.toLocaleString("it-IT", {
+    style: "currency",
+    currency
+  });
+};
 
 const addZeroIfLessThan = (value, number = 10) => {
   return value < number ? "0" + value : value;
